@@ -535,7 +535,7 @@ class FileSystem(object):
 
         # Run `before()` for every loaded plugin and if any of them raise an exception
         #  then we skip importing the file and log a message.
-        plugins_run_before_status = self.plugins.run_all_before(_file, destination)
+        plugins_run_before_status = self.plugins.run_all_before(_file, destination, media)
         if(plugins_run_before_status == False):
             log.warn('At least one plugin pre-run failed for %s' % _file)
             return

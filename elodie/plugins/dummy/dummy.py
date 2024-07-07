@@ -15,6 +15,6 @@ class Dummy(PluginBase):
     def __init__(self):
         self.before_ran = False
 
-    def before(self, file_path, destination_folder):
+    def before(self, file_path, destination_folder, media):
         self.before_ran = True
 

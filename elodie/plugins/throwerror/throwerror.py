@@ -21,5 +21,5 @@ class ThrowError(PluginBase):
     def batch(self):
         raise ElodiePluginError('Sample plugin error for batch')
 
-    def before(self, file_path, destination_folder):
+    def before(self, file_path, destination_folder, media):
         raise ElodiePluginError('Sample plugin error for before')

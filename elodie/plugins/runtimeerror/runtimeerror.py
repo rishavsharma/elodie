@@ -16,10 +16,10 @@ class RuntimeError(PluginBase):
         pass
 
     def after(self, file_path, destination_folder, final_file_path, metadata):
-        print(does_not_exist)
+        print('does_not_exist')
 
     def batch(self):
-        print(does_not_exist)
+        print('does_not_exist')
 
-    def before(self, file_path, destination_folder):
-        print(does_not_exist)
+    def before(self, file_path, destination_folder, media):
+        print('does_not_exist')

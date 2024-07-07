@@ -44,7 +44,7 @@ class PluginBase(object):
     def batch(self):
         pass
 
-    def before(self, file_path, destination_folder):
+    def before(self, file_path, destination_folder, media):
         pass
 
     def log(self, msg):
@@ -196,7 +196,7 @@ class Plugins(object):
                 log.error(format_exc())
         return pass_status
 
-    def run_all_before(self, file_path, destination_folder):
+    def run_all_before(self, file_path, destination_folder, media):
         """Process `before` methods of each plugin that was loaded.
         """
         self.load()
@@ -209,7 +209,7 @@ class Plugins(object):
             # If any other error occurs we log the message and proceed as usual.
             # By default, plugins don't change behavior.
             try:
-                this_method(file_path, destination_folder)
+                this_method(file_path, destination_folder, media)
                 log.info('Called before() for {}'.format(cls))
             except ElodiePluginError as err:
                 log.warn('Plugin {} raised an exception in run_all_after: {}'.format(cls, err))

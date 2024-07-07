@@ -195,18 +195,30 @@ def _update_db(source, debug):
         
     db = Db()
     # db.backup_hash_db()
-
+    all_files=set()
     for current_file in FILESYSTEM.get_all_files(source):
+        all_files.add(current_file)
         if not db.check_file(current_file):
             result.append((current_file, True))
             db.add_hash(db.checksum(current_file), current_file)
             log.progress()
         else:
-            result.append((current_file, False))
-    
-    # db.update_hash_db()
+            pass
+            # result.append((current_file, False))
     log.progress('', True)
     result.write()
+    result = Result()
+    print('Checking Deleted files')
+    for checksum, path in db.all():
+        if path not in all_files:            
+            result.append((path, False))
+            log.progress()
+    
+    log.progress('', True)
+    result.write()
+
+    # db.update_hash_db()
+    
 
 
 @click.command('verify')
