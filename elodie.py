@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from __future__ import print_function
 import os
@@ -176,6 +176,38 @@ def _generate_db(source, debug):
     db.update_hash_db()
     log.progress('', True)
     result.write()
+
+@click.command('update-db')
+@click.option('--source', type=click.Path(file_okay=False),
+              required=True, help='Source of your photo library.')
+@click.option('--debug', default=False, is_flag=True,
+              help='Override the value in constants.py with True.')
+def _update_db(source, debug):
+    """update the hash.json database which contains all of the sha256 signatures of media files. The hash.json file is located at ~/.elodie/.
+    """
+    constants.debug = debug
+    result = Result()
+    source = os.path.abspath(os.path.expanduser(source))
+
+    if not os.path.isdir(source):
+        log.error('Source is not a valid directory %s' % source)
+        sys.exit(1)
+        
+    db = Db()
+    # db.backup_hash_db()
+
+    for current_file in FILESYSTEM.get_all_files(source):
+        if not db.check_file(current_file):
+            result.append((current_file, True))
+            db.add_hash(db.checksum(current_file), current_file)
+            log.progress()
+        else:
+            result.append((current_file, False))
+    
+    # db.update_hash_db()
+    log.progress('', True)
+    result.write()
+
 
 @click.command('verify')
 @click.option('--debug', default=False, is_flag=True,
@@ -364,6 +396,7 @@ def main():
 main.add_command(_import)
 main.add_command(_update)
 main.add_command(_generate_db)
+main.add_command(_update_db)
 main.add_command(_verify)
 main.add_command(_batch)
 

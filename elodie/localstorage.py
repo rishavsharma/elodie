@@ -33,12 +33,14 @@ class Db(object):
                 os.utime(constants.hash_db, None)
 
         self.hash_db = {}
+        self.files_set = set()
 
         # We know from above that this file exists so we open it
         #   for reading only.
         with open(constants.hash_db, 'r') as f:
             try:
                 self.hash_db = json.load(f)
+                self.files_set=set(self.hash_db.values())
             except ValueError:
                 pass
 
@@ -66,6 +68,7 @@ class Db(object):
         :param bool write: If true, write the hash db to disk.
         """
         self.hash_db[key] = value
+        self.files_set.add(value)
         if(write is True):
             self.update_hash_db()
 
@@ -108,6 +111,14 @@ class Db(object):
         :returns: bool
         """
         return key in self.hash_db
+    
+    def check_file(self, file):
+        """Check whether a file is present for the given path.
+
+        :param str key:
+        :returns: bool
+        """
+        return file in self.files_set
 
     def checksum(self, file_path, blocksize=65536):
         """Create a hash value for the given file.
